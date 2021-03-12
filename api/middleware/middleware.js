@@ -1,4 +1,5 @@
 const Action = require('../actions/actions-model');
+const Project = require('../projects/projects-model');
 
 const validateActionId = (req, res, next) => {
     const id = req.params.id;
@@ -27,6 +28,20 @@ const validateNewAction = (req, res, next) => {
     }
 };
 
+const validateProjectId = (req, res, next) => {
+    const id = req.params.id;
+    Project.get(id)
+      .then(project => {
+          if(!project) {
+              res.status(404).json({message: `project with id ${id} not found`})
+          } else {
+              req.project = project
+              next()
+          }
+      })
+      .catch(next);
+};
+
 const handleError = (err, req, res, next) => { //eslint-disable-line
     res.status(500).json({
         message: err.message, //DEV only
@@ -38,5 +53,6 @@ const handleError = (err, req, res, next) => { //eslint-disable-line
 module.exports = {
     handleError,
     validateActionId,
-    validateNewAction
+    validateNewAction,
+    validateProjectId
 };
