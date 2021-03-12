@@ -14,6 +14,19 @@ const validateActionId = (req, res, next) => {
       .catch(next);
 };
 
+const validateNewAction = (req, res, next) => {
+    const action = req.body 
+    console.log(action, 'middleware')
+    if (!action) {
+        res.status(400).json({message: 'must include request body'})
+    } else if(!action.project_id || !action.notes || !action.description) {
+        res.status(400).json({message: 'actions must include a project_id'})
+    } else {
+        req.action = action
+        next()
+    }
+};
+
 const handleError = (err, req, res, next) => { //eslint-disable-line
     res.status(500).json({
         message: err.message, //DEV only
@@ -24,5 +37,6 @@ const handleError = (err, req, res, next) => { //eslint-disable-line
 
 module.exports = {
     handleError,
-    validateActionId
+    validateActionId,
+    validateNewAction
 };
