@@ -14,12 +14,23 @@ router.get('/:id', validateActionId, (req, res) => {
   res.json(req.action);
 });
 
-router.post('/', validateNewAction, (req, res) => {
-  console.log(req.body, 'actionsrouter')
+router.post('/', validateNewAction, (req, res, next) => {
   Action.insert(req.action)
     .then(res.status(201).json(req.action))
-    //.catch(next)
-})
+    .catch(next);
+});
+
+router.put('/:id', validateActionId, validateNewAction, (req, res, next) => {
+  Action.update(req.params.id, req.action)
+    .then(res.status(200).json(req.action))
+    .catch(next);
+});
+
+router.delete('/:id', validateActionId, (req, res, next) => {
+  Action.remove(req.params.id)
+   .then(res.json({ message: `action with id ${req.params.id} successfully deleted`}))
+   .catch(next);
+});
 
 router.use(handleError);
 
