@@ -10,7 +10,7 @@ router.get('/', (req, res, next) => {
       .catch(next);
 });
 
-router.get('/:id', validateActionId, (req, res, next) => {
+router.get('/:id', validateActionId, (req, res) => {
   res.json(req.action);
 });
 

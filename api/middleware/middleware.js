@@ -10,7 +10,8 @@ const validateActionId = (req, res, next) => {
               req.action = action
               next()
           }
-      });
+      })
+      .catch(next);
 };
 
 const handleError = (err, req, res, next) => { //eslint-disable-line
