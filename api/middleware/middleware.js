@@ -17,11 +17,10 @@ const validateActionId = (req, res, next) => {
 
 const validateNewAction = (req, res, next) => {
     const action = req.body 
-    console.log(action, 'middleware')
     if (!action) {
         res.status(400).json({message: 'must include request body'})
     } else if(!action.project_id || !action.notes || !action.description) {
-        res.status(400).json({message: 'actions must include a project_id'})
+        res.status(400).json({message: 'actions must include a project_id, notes, and description field'})
     } else {
         req.action = action
         next()
@@ -42,6 +41,18 @@ const validateProjectId = (req, res, next) => {
       .catch(next);
 };
 
+const validateNewProject = (req, res, next) => {
+    const project = req.body;
+    if(!project) {
+        res.status(400).json({message: 'must include request body'})
+    } else if(!project.name || !project.description) {
+        res.status(400).json({message: 'projects must include a name and description'})
+    } else {
+        req.project = project
+        next()
+    }
+};
+
 const handleError = (err, req, res, next) => { //eslint-disable-line
     res.status(500).json({
         message: err.message, //DEV only
@@ -54,5 +65,6 @@ module.exports = {
     handleError,
     validateActionId,
     validateNewAction,
-    validateProjectId
+    validateProjectId,
+    validateNewProject
 };
